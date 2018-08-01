@@ -6,8 +6,8 @@
 </template>
 
 <script>
-  import { hasOwn } from '@/assets/js/utils';
   import Popup from '@/components/base/Popup';
+  import { hasOwn } from '@/common/utils';
 
   const props = {
     title: {

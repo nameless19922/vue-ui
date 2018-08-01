@@ -1,8 +1,8 @@
 <template>
   <component
-    :is="type"
+    :is="buttonType"
     :href="href"
-    :type="type === 'button' ? 'button' : null"
+    :type="buttonType === 'button' && type ? type : null"
     class="btn"
     @click="onClick"
   >
@@ -22,6 +22,10 @@
 
     classes: {
       type: String
+    },
+
+    type: {
+      type: String
     }
   };
 
@@ -33,7 +37,7 @@
     props,
 
     computed: {
-      type() {
+      buttonType() {
         return typeof this.href !== 'undefined' ? 'a': 'button';
       }
     }

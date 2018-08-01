@@ -4,10 +4,9 @@
       <input
         class="form-checkbox__input"
         type="checkbox"
-        :checked="checked"
         :name="name"
-        :disabled="disabled"
         :value="value"
+        :disabled="disabled"
 
         @change="onChange"
       >
@@ -15,33 +14,38 @@
         <slot>{{ label }}</slot>
       </span>
     </label>
+
+    <span class="form-control__error" v-if="errors.has(name)">
+      {{ errors.first(name) }}
+    </span>
   </div>
 </template>
 
 <script>
+  import validatable from '@/assets/js/mixins/validatable';
+
   const props = {
     name: String,
 
     label: String,
 
     value: {
-      type: [String, Number, Boolean],
-      default: false
+      type: [String, Number, Boolean]
     },
 
     checked: {
-      type: Boolean,
-      default: false
+      type: Boolean
     },
 
     disabled: {
-      type: Boolean,
-      default: false
+      type: Boolean
     }
   };
 
   export default {
     name: 'FormCheckbox',
+
+    mixins: [validatable],
 
     props,
 
@@ -53,7 +57,12 @@
 
     methods: {
       onChange(e) {
-        this.isChecked = e.target.checked;
+        this.isChecked = e.target.checked ? true : null;
+
+        if (typeof this.validate === 'function') {
+          this.validate(this.isChecked);
+        }
+
         this.$emit('input', this.isChecked);
       }
     }

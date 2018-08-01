@@ -1,5 +1,5 @@
-<template>
-  <span class="icon" v-once v-html="src" @click="onClick"></span>
+<template functional>
+  <span class="icon" v-html="src" @click="onClick" v-once></span>
 </template>
 
 <script>

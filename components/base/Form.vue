@@ -1,32 +1,27 @@
 <template>
-  <form class="form">
+  <form class="form" @submit.prevent="onSubmit">
     <slot />
   </form>
 </template>
 
 <script>
-  const props = {
-
-  };
-
   export default {
     name: 'Form',
 
-    props,
+    data: () => ({
+      firstly: false
+    }),
 
     methods: {
-      onSubmit(success, fail) {
-        const { $touch, $invalid } = this.$v;
-
-        $touch();
-
-        if (!$invalid && typeof success === 'function') {
-          success();
-        } else {
-          if (typeof fail === 'function') {
-
+      onSubmit() {
+        this.$validator.validateAll().then((success) => {
+          if (success) {
+            this.$modal.show(
+              'popup-message',
+              { title: 'Спасибо!', text: 'Спасибо! Мы свяжемся с вами в ближайшее время.' }
+            );
           }
-        }
+        });
       }
     }
   }

@@ -21,14 +21,14 @@ module.exports = {
     ]
   },
 
-  plugins: markClientPlugins(plugins, []),
+  plugins: markClientPlugins(plugins, ['vue-select']),
 
   build: {
-    vendor: plugins.concat(['babel-polyfill']),
+    watch: ['server', 'common'],
 
-    extractCSS: {
-      allChunks: true
-    },
+    vendor: plugins.concat(['babel-polyfill', 'axios']),
+
+    extractCSS: { allChunks: true },
 
     extend(config, { isDev, isClient }) {
       if (isDev && isClient) {

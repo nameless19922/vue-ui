@@ -41,10 +41,15 @@
 
       v-else
     >{{ value }}</textarea>
+    <span class="form-control__error" v-if="errors.has(name)">
+      {{ errors.first(name) }}
+    </span>
   </label>
 </template>
 
 <script>
+  import validatable from '@/assets/js/mixins/validatable';
+
   const props = {
     name: String,
 
@@ -85,25 +90,26 @@
     rows: {
       type: Number,
       default: 2
-    },
+    }
   };
 
   export default {
     name: 'FormControl',
 
+    mixins: [validatable],
+
     props,
 
-    data() {
-      return {
-        isActive: null
-      }
-    },
+    data: () => ({
+      isActive: null
+    }),
 
     computed: {
       classes() {
         return [
           { '_active': this.isActive || this.valueLength },
-          { '_disabled': this.disabled }
+          { '_error': this.errors.has(this.name) },
+          { '_valid': !this.errors.has(this.name) && this.firstly }
         ];
       },
 
@@ -128,6 +134,10 @@
 
     methods: {
       updateValue(value) {
+        if (typeof this.validate === 'function') {
+          this.validate(value);
+        }
+
         this.$emit('input', value);
       },
 
@@ -140,6 +150,8 @@
       },
 
       onFocus(e) {
+        console.log(e);
+
         this.isActive = true;
         this.$emit('focus', e);
       },
@@ -148,7 +160,7 @@
         this.isActive = false;
         this.$emit('blur', e);
       },
-    }
+    },
   }
 </script>
 
@@ -176,6 +188,9 @@
 
       &::ms-clear
         display none
+
+      &:disabled
+        pointer-events none
 
     &._error &__input
       border-color $color-coral-reef
@@ -210,4 +225,10 @@
       line-height 1
       text-align left
       transition all $transition-time ease-in-out
+
+    &__error
+      display block
+      margin-top 7px
+      color $color-coral-reef
+      font-size 10px
 </style>
