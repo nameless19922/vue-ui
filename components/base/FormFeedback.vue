@@ -6,7 +6,6 @@
         name="name"
         rules="required"
         messages="required:Введите имя"
-        placeholder="Введите имя"
         label="Имя"
         floatingLabel
         v-model="name"
@@ -18,7 +17,6 @@
         name="email"
         rules="required|email"
         messages="required:Введите ваш email|email:Введите корректный email"
-        placeholder="Введите email"
         label="Email"
         floatingLabel
         v-model="email"
@@ -29,7 +27,6 @@
         class="_big"
         name="phone"
         rules="required|phone"
-        placeholder="Введите телефон"
         messages="required:Введите телефон|phone:Введите корректный телефон"
         label="Телефон"
         floatingLabel

@@ -1,4 +1,4 @@
-import { hasOwn, isNotEmptyString } from '@/common/utils';
+import { hasOwn } from '@/common/utils';
 
 export default {
   inject: ['$validator'],
@@ -23,7 +23,7 @@ export default {
     },
 
     validate(val) {
-      if (isNotEmptyString(this.rules)) {
+      if (this.rules && this.rules.length) {
         this.$validator.validate(this.name, val, null);
       }
     },
@@ -48,20 +48,22 @@ export default {
   },
 
   created() {
-    const field = this.$validator.attach({
-      scope: null,
-      name: this.name,
-      rules: this.rules,
-      getter: this.getter,
-      context: this.context
-    });
-
-    if (isNotEmptyString(this.messages)) {
-      this.$validator.dictionary.merge({
-        ru: {
-          custom: this.getErrorMessages(field)
-        }
+    if (this.rules) {
+      const field = this.$validator.attach({
+        scope: null,
+        name: this.name,
+        rules: this.rules,
+        getter: this.getter,
+        context: this.context
       });
+
+      if (this.messages && this.messages.length) {
+        this.$validator.dictionary.merge({
+          ru: {
+            custom: this.getErrorMessages(field)
+          }
+        });
+      }
     }
   },
 

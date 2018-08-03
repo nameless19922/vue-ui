@@ -1,14 +1,14 @@
 <template>
   <component
+    class="btn"
     :is="buttonType"
     :href="href"
     :type="buttonType === 'button' && type ? type : null"
-    class="btn"
     @click="onClick"
   >
-    <span class="btn__content">
+    <div class="btn__content">
       <slot></slot>
-    </span>
+    </div>
   </component>
 </template>
 
@@ -20,12 +20,12 @@
       type: String
     },
 
-    classes: {
+    type: {
       type: String
     },
 
-    type: {
-      type: String
+    block: {
+      type: Boolean
     }
   };
 
@@ -39,6 +39,12 @@
     computed: {
       buttonType() {
         return typeof this.href !== 'undefined' ? 'a': 'button';
+      },
+
+      classes() {
+        return [
+          { '_block': this.block }
+        ];
       }
     }
   };
@@ -49,7 +55,8 @@
 
   .btn
     button()
-    padding 17px 35px
+    height 48px
+    padding 0 15px
     background $color-brandeis-blue
     border none
     border-radius 0
@@ -58,6 +65,12 @@
     letter-spacing 1.2px
     text-transform uppercase
     transition background $transition-time
+
+    &__content
+      display flex
+      align-items center
+      justify-content center
+      text-align center
 
     &._small
       height 38px

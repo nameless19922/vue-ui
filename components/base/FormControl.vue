@@ -2,8 +2,7 @@
   <label class="form-control" :class="classes">
     <div
       class="form-control__label"
-      :class="labelClasses"
-      v-if="label || slots.default"
+      v-if="label"
     >
       <slot>{{ label }}</slot>
     </div>
@@ -109,18 +108,13 @@
         return [
           { '_active': this.isActive || this.valueLength },
           { '_error': this.errors.has(this.name) },
-          { '_valid': !this.errors.has(this.name) && this.firstly }
+          { '_valid': !this.errors.has(this.name) && this.firstly },
+          { '_floating': this.hasFloatingLabel }
         ];
       },
 
-      labelClasses() {
-        return {
-          '_floating': this.hasFloatingLabel
-        };
-      },
-
       hasLabel() {
-        return this.label.length;
+        return this.label && this.label.length;
       },
 
       hasFloatingLabel() {
@@ -150,8 +144,6 @@
       },
 
       onFocus(e) {
-        console.log(e);
-
         this.isActive = true;
         this.$emit('focus', e);
       },
@@ -165,11 +157,17 @@
 </script>
 
 <style lang="stylus">
-  $form-control-padding = 0 40px 0 20px
+  $form-control-padding = 0 20px
+  $height = 50px
 
   .form-control
     display block
     position relative
+
+    textarea&__input
+      height auto
+      padding 20px
+      resize none
 
     &__input
       width 100%
@@ -182,6 +180,10 @@
       letter-spacing 1px
       line-height 1
       transition padding-top  $transition-time ease-in-out
+
+      &:disabled
+        background-color $color-snow
+        pointer-events none
 
       &:focus
         outline none
@@ -198,28 +200,24 @@
     &._valid &__input
       border-color $color-eton-blue
 
-    &._active &__label
-      top 1.3em
-      color $color-taupe-gray
-      font-size 10px !important
+    &._floating
+      & ^[0]__label
+        position absolute
+        top 18px
+        left 0
+        margin-bottom 0
+        padding-left 20px
 
-    &._active &__input
-      padding-top 1.1em
+      &._active
+        & ^[0]__label
+          top 10px
+          font-size 10px
 
-    &._big &__label
-      font-size 14px
-
-    &._big &__input
-      height 60px
-
-    &._small
-      height 30px
+        & ^[0]__input
+          padding-top 12px
 
     &__label
-      position absolute
-      top 1.75em
-      left 0
-      padding $form-control-padding
+      margin-bottom 7px
       cursor text
       font-size 14px
       line-height 1

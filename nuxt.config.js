@@ -51,11 +51,6 @@ module.exports = {
         },
 
         'vue-loader': (vue) => {
-          vue.options.transformToRequire = {
-            ...vue.options.transformToRequire,
-            Icon: 'src'
-          };
-
           findLoaders(vue.options.loaders.stylus, 'stylus-loader', (stylus) => {
             stylus.options = {
               import: [path.resolve('./assets/stylus/helpers/variables.styl')],
