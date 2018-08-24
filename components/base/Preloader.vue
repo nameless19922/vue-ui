@@ -1,5 +1,9 @@
 <template>
-  <div class="preloader" :style="{ background }">
+  <div
+    class="preloader"
+    :class="{ '_inline': inline }"
+    :style="{ background: inline ? 'transparent' : background }"
+  >
     <div class="preloader__wrapper">
       <div class="preloader__spinner"></div>
     </div>
@@ -10,6 +14,11 @@
   const props = {
     background: {
       type: String
+    },
+
+    inline: {
+      type: Boolean,
+      default: false
     }
   };
 
@@ -31,6 +40,17 @@
 
     background rgba(255, 255, 255, 1)
     z-index 600
+
+    &._inline
+      position static
+      background transparent
+
+      & ^[0]__wrapper
+        margin 0
+        position static
+
+      & ^[0]__spinner
+        margin 0 auto
 
     &__parent
       position relative

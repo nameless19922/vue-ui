@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const {
   findLoaders,
   modifyLoaders,
@@ -21,12 +22,21 @@ module.exports = {
     ]
   },
 
-  plugins: markClientPlugins(plugins, ['vue-select']),
+  plugins: markClientPlugins(
+    plugins,
+    ['vue-select', 'inputmask']
+  ),
 
   build: {
-    watch: ['server', 'common'],
+    watch: ['server', 'common', 'config'],
 
     vendor: plugins.concat(['babel-polyfill', 'axios']),
+
+    plugins: [
+      new webpack.optimize.LimitChunkCountPlugin({
+        maxChunks: 4
+      })
+    ],
 
     extractCSS: { allChunks: true },
 

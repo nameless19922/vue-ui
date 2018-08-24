@@ -1,53 +1,63 @@
 <template>
   <label class="form-control" :class="classes">
-    <div
-      class="form-control__label"
-      v-if="label"
-    >
+    <div class="form-control__label" v-if="label || $slots.default">
       <slot>{{ label }}</slot>
     </div>
-    <input
-      class="form-control__input"
-      :disabled="disabled"
-      :name="name"
-      :placeholder="hasFloatingLabel ? null : placeholder"
-      :type="type"
-      :value="value"
+    <div class="form-control__box">
+      <div class="form-control__icon" v-if="icon || $slots.icon">
+        <slot name="icon">
+          <Icon :src="icon" />
+        </slot>
+      </div>
+      <input
+        class="form-control__input"
+        :disabled="disabled"
+        :name="name"
+        :placeholder="hasFloatingLabel ? null : placeholder"
+        :type="type"
+        :value="value"
 
-      @input="updateValue($event.target.value)"
-      @keydown="onKeydown"
-      @blur="onBlur"
-      @change="onChange"
-      @focus="onFocus"
+        @input="updateValue($event.target.value)"
+        @keydown="onKeydown"
+        @blur="onBlur"
+        @change="onChange"
+        @focus="onFocus"
 
-      v-if="!multiLine"
-    >
+        ref="control"
 
-    <textarea
-      class="form-control__input"
-      :disabled="disabled"
-      :name="name"
-      :placeholder="hasFloatingLabel ? null : placeholder"
-      :type="type"
-      :value="value"
-      :rows="rows"
+        v-if="!multiLine"
+      >
 
-      @input="updateValue($event.target.value)"
-      @keydown="onKeydown"
-      @blur="onBlur"
-      @change="onChange"
-      @focus="onFocus"
+      <textarea
+        class="form-control__input"
+        :disabled="disabled"
+        :name="name"
+        :placeholder="hasFloatingLabel ? null : placeholder"
+        :type="type"
+        :value="value"
+        :rows="rows"
 
-      v-else
-    >{{ value }}</textarea>
-    <span class="form-control__error" v-if="errors.has(name)">
-      {{ errors.first(name) }}
-    </span>
+        @input="updateValue($event.target.value)"
+        @keydown="onKeydown"
+        @blur="onBlur"
+        @change="onChange"
+        @focus="onFocus"
+
+        ref="control"
+
+        v-else
+      >{{ value }}</textarea>
+      <span class="form-control__error" v-if="errors.has(name)">
+        {{ errors.first(name) }}
+      </span>
+    </div>
   </label>
 </template>
 
 <script>
+  import Icon from '@/components/base/Icon';
   import validatable from '@/assets/js/mixins/validatable';
+  import controlsHooks from '@/assets/js/mixins/controls-hooks';
 
   const props = {
     name: String,
@@ -89,18 +99,24 @@
     rows: {
       type: Number,
       default: 2
-    }
+    },
+
+    mask: [String, Object],
+
+    icon: String
   };
 
   export default {
     name: 'FormControl',
 
-    mixins: [validatable],
+    components: { Icon },
+
+    mixins: [controlsHooks, validatable],
 
     props,
 
     data: () => ({
-      isActive: null
+      isActive: false
     }),
 
     computed: {
@@ -109,12 +125,15 @@
           { '_active': this.isActive || this.valueLength },
           { '_error': this.errors.has(this.name) },
           { '_valid': !this.errors.has(this.name) && this.firstly },
-          { '_floating': this.hasFloatingLabel }
+          { '_floating': this.hasFloatingLabel },
+          { '_multiline': this.multiLine }
         ];
       },
 
       hasLabel() {
-        return this.label && this.label.length;
+        const label = this.label || this.$slots.default;
+
+        return label && label.length;
       },
 
       hasFloatingLabel() {
@@ -151,8 +170,14 @@
       onBlur(e) {
         this.isActive = false;
         this.$emit('blur', e);
-      },
+      }
     },
+
+    mounted() {
+      if (this.mask) {
+        new this.Inputmask(this.mask).mask(this.$refs.control);
+      }
+    }
   }
 </script>
 
@@ -164,10 +189,17 @@
     display block
     position relative
 
-    textarea&__input
-      height auto
-      padding 20px
-      resize none
+    &__box
+      position relative
+
+    &__icon
+      position absolute
+      top 50%
+      right 20px
+      margin-top -8px
+
+      svg
+        fill $primary-text-color
 
     &__input
       width 100%
@@ -177,9 +209,8 @@
       border-radius 0
       color $color-black
       font-size 14px
-      letter-spacing 1px
       line-height 1
-      transition padding-top  $transition-time ease-in-out
+      transition padding-top $transition-time ease-in-out
 
       &:disabled
         background-color $color-snow
@@ -193,6 +224,17 @@
 
       &:disabled
         pointer-events none
+
+    &._multiline
+      & ^[0]__input
+        height auto
+        padding 20px
+        overflow auto
+        resize none
+
+      & ^[0]__icon
+        top 25px
+        transform translate3d(0, 0, 0)
 
     &._error &__input
       border-color $color-coral-reef
@@ -208,21 +250,26 @@
         margin-bottom 0
         padding-left 20px
 
+      & ^[0]__input
+        padding-top 12px
+
+      & textarea^[0]__input
+        padding-top 25px
+
       &._active
         & ^[0]__label
           top 10px
           font-size 10px
 
-        & ^[0]__input
-          padding-top 12px
-
     &__label
+      position relative
       margin-bottom 7px
       cursor text
       font-size 14px
       line-height 1
       text-align left
       transition all $transition-time ease-in-out
+      z-index 2
 
     &__error
       display block

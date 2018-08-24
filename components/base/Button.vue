@@ -1,6 +1,7 @@
 <template>
   <component
     class="btn"
+    :class="classes"
     :is="buttonType"
     :href="href"
     :type="buttonType === 'button' && type ? type : null"
@@ -8,29 +9,29 @@
   >
     <div class="btn__content">
       <slot></slot>
+      <Icon src="progressbar" :size="20" v-if="loading" right />
     </div>
   </component>
 </template>
 
 <script>
+  import Icon from '@/components/base/Icon';
   import clickable from '@/assets/js/mixins/clickable';
 
   const props = {
-    href: {
-      type: String
-    },
+    href: String,
 
-    type: {
-      type: String
-    },
+    type:  String,
 
-    block: {
-      type: Boolean
-    }
+    block: Boolean,
+
+    loading: [Boolean, String]
   };
 
   export default {
     name: 'Button',
+
+    components: { Icon },
 
     mixins: [clickable],
 
@@ -43,8 +44,14 @@
 
       classes() {
         return [
-          { '_block': this.block }
+          { '_loading': this.loading },
         ];
+      }
+    },
+
+    methods: {
+      hasLoadingText() {
+        return typeof this.loading === 'string';
       }
     }
   };
@@ -64,7 +71,25 @@
     font-size 10px
     letter-spacing 1.2px
     text-transform uppercase
-    transition background $transition-time
+    transition background $transition-time, opacity $transition-time
+
+    &._loading
+      opacity .7
+      pointer-events none
+
+      svg
+        animation progress-rotate .7s linear infinite
+
+        @keyframes progress-rotate
+          to
+            transform rotate(1turn)
+
+        circle
+          stroke $color-white
+          stroke-dasharray 89,200
+          stroke-dashoffset -35px
+          stroke-linecap round
+
 
     &__content
       display flex

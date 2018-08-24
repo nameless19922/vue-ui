@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <div class="layout__container header__container">
-      <a href="javascript:;" target="_blank" :class="classList">
+      <a href="https://broker.ru" target="_blank" class="header__logo" :class="classes">
         <span class="header__logo-img"></span>
         <span class="header__logo-text">БКС брокер</span>
       </a>
@@ -13,12 +13,13 @@
 <script>
   import Icon from '@/components/base/Icon';
 
-  const types = ['white'];
+  const types = ['default', 'white'];
 
   const props = {
-    type: {
+    logo: {
       type: String,
-      default: ''
+      default: types[0],
+      validator: value => types.indexOf(value) !== -1
     }
   };
 
@@ -28,8 +29,8 @@
     props,
 
     computed: {
-      classList() {
-        return `header__logo${this.type.length ? [' ',this.type].join('_') : ''}`;
+      classes() {
+        return `_${this.logo}`;
       }
     }
   }

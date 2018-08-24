@@ -3,7 +3,7 @@ const { Router } = require('express');
 const router = Router();
 
 router.get('/', (req, res) => {
-  res.json({ success: true, request_id: 123456 });
+  setTimeout(() => res.json({ success: true, request_id: 123456 }), 3000);
 });
 
 module.exports = router;

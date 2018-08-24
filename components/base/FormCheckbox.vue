@@ -23,6 +23,7 @@
 
 <script>
   import validatable from '@/assets/js/mixins/validatable';
+  import controlsHooks from '@/assets/js/mixins/controls-hooks';
 
   const props = {
     name: String,
@@ -45,7 +46,7 @@
   export default {
     name: 'FormCheckbox',
 
-    mixins: [validatable],
+    mixins: [controlsHooks, validatable],
 
     props,
 
@@ -59,9 +60,7 @@
       onChange(e) {
         this.isChecked = e.target.checked ? true : null;
 
-        if (typeof this.validate === 'function') {
-          this.validate(this.isChecked);
-        }
+        this.validate && this.validate(this.isChecked);
 
         this.$emit('input', this.isChecked);
       }

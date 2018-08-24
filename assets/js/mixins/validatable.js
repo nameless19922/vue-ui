@@ -38,7 +38,7 @@ export default {
       for (const item of listMessages) {
         const info = item.split(':');
 
-        if (info.length === partsNumber && Object.prototype.hasOwnProperty.call(field.rules, info[0])) {
+        if (info.length === partsNumber && hasOwn(field.rules, info[0])) {
           result[this.name][info[0]] = info[1];
         }
       }

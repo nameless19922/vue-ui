@@ -1,8 +1,11 @@
 <template>
-  <Popup :maxWidth="1024" title="popup-message" @before-open="beforeOpen">
-    <div class="popup-message__title">{{ contentTitle }}</div>
-    {{ contentText }}
-  </Popup>
+  <div class="popup-message__wrapper">
+    <button class="popup__close" @click="$emit('close')">×</button>
+    <div class="popup-message__content">
+      <div class="popup-message__title">{{ title }}</div>
+      <div class="popup-message__text">{{ text }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -10,16 +13,10 @@
   import { hasOwn } from '@/common/utils';
 
   const props = {
-    title: {
-      type: [String],
-      default: ''
-    },
+    title: String,
 
-    text: {
-      type: [String],
-      default: ''
-    }
-  };
+    text: String
+  }
 
   export default {
     name: 'PopupMessage',
@@ -28,31 +25,23 @@
 
     components: { Popup },
 
-    props,
-
-    data() {
-      return {
-        contentTitle: '',
-        contentText: ''
-      }
-    },
-
-    methods: {
-      beforeOpen(e) {
-        if (typeof e.params === 'object') {
-          this.contentTitle = hasOwn(e.params, 'title') && e.params.title;
-          this.contentText = hasOwn(e.params, 'text') && e.params.text;
-        }
-      }
-    }
+    props
   }
 </script>
 
 <style lang="stylus">
+  #modals-container
+    .v--modal-overlay
+      z-index 1000
+
   .popup-message
-    padding 100px 15% 60px
+    position relative
+    padding 100px 15% 90px
     background-color $color-glitter
     text-align center
+
+    &__close
+      popupClose()
 
     &::before
       content ''
@@ -60,7 +49,7 @@
       width 100%
       height 74px
       margin-bottom 36px
-      background url(../../assets/images/logo-gray.png) no-repeat 50% 0
+      background url(/images/logo-gray.png) no-repeat 50% 0
       opacity .2
 
     &__title

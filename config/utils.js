@@ -34,16 +34,17 @@ function getFilesFromDir(dir, ext) {
 }
 
 function markClientPlugins(plugins, clientList) {
+
   return plugins.map((item) => {
     let isClient = false;
 
-    if (clientList.length) {
+    if (Array.isArray(clientList) && clientList.length) {
       const index = clientList.indexOf(item);
 
       isClient = index !== -1;
 
       if (isClient) {
-        clientList = clientList.slice(index, 1);
+        clientList.splice(index, index + 1);
       }
     }
 

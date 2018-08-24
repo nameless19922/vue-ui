@@ -1,5 +1,5 @@
 <template>
-  <Popup :maxWidth="670" title="popup-feedback">
+  <Popup :maxWidth="670" name="popup-feedback" classes="popup-feedback">
     <div class="popup-feedback__box">
       <div class="popup-feedback__header">
         <div class="popup-feedback__title">Свяжитесь с&nbsp;финансовым советником</div>
@@ -55,5 +55,4 @@
       &-submit
         max-width 225px
         margin 30px auto 0
-
 </style>

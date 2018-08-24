@@ -1,9 +1,14 @@
 <template>
-  <Header type="white">
+  <Header logo="white">
     <div class="header__contacts">
       <span class="header__text">Как вложить деньги в облигации</span>
       <a href="tel:88005005545" class="header__phone cpc-tel">8&nbsp;800&nbsp;500&nbsp;55&nbsp;45</a>
-      <Button @click="showPopup()" class="_small">Консультация</Button>
+      <Button
+        @click="$modal.show('popup-feedback')"
+        class="_small"
+      >
+        Консультация
+      </Button>
     </div>
   </Header>
 </template>
@@ -17,13 +22,7 @@
 
     extends: Header,
 
-    components: { Button, Header },
-
-    methods: {
-      showPopup() {
-        this.$modal.show('popup-feedback');
-      }
-    }
+    components: { Button, Header }
   };
 </script>
 

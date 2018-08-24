@@ -5,24 +5,61 @@
 </template>
 
 <script>
+  import { hasOwn } from '@/common/utils';
+
+  const props = {
+    actions: Object
+  };
+
   export default {
     name: 'Form',
 
-    data: () => ({
-      firstly: false
-    }),
+    props,
+
+    data() {
+      return {
+        controls: []
+      }
+    },
 
     methods: {
-      onSubmit() {
-        this.$validator.validateAll().then((success) => {
-          if (success) {
-            this.$modal.show(
-              'popup-message',
-              { title: 'Спасибо!', text: 'Спасибо! Мы свяжемся с вами в ближайшее время.' }
-            );
+      checkAction(name) {
+        return this.actions && hasOwn(this.actions, name);
+      },
+
+      resetForm() {
+        console.log(this.controls);
+      },
+
+      async onSubmit() {
+        try {
+          const status = await this.$validator.validateAll();
+
+          if (status && this.checkAction('success')) {
+            this.actions['success']();
           }
-        });
+        } catch (exc) {
+          console.error(exc);
+
+          if (this.checkAction(this.actions, 'fail')) {
+            this.actions['fail']();
+          }
+        }
       }
+    },
+
+    created() {
+      this.$on('addControl', (control) => {
+        if (control) {
+          this.controls.push(control);
+        }
+      });
+
+      this.$on('removeControl', (control) => {
+        if (control) {
+          this.controls.splice(this.controls.indexOf(control), 1);
+        }
+      });
     }
   }
 </script>
