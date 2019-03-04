@@ -1,13 +1,12 @@
 <template>
   <div class="layout">
-    <modals-container />
     <nuxt />
   </div>
 </template>
 
 <script>
   import PopupMessage from '@/components/base/PopupMessage';
-  import { dynamicMessage } from '@/assets/js/utils/components';
+  import { dynamicMessage } from '@/utils/components';
 
   export default {
     name: 'defaultLayout',

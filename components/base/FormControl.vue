@@ -56,8 +56,7 @@
 
 <script>
   import Icon from '@/components/base/Icon';
-  import validatable from '@/assets/js/mixins/validatable';
-  import controlsHooks from '@/assets/js/mixins/controls-hooks';
+  import validatable from '@/utils/mixins/validatable';
 
   const props = {
     name: String,
@@ -111,7 +110,7 @@
 
     components: { Icon },
 
-    mixins: [controlsHooks, validatable],
+    mixins: [validatable],
 
     props,
 

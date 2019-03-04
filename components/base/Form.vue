@@ -16,19 +16,13 @@
 
     props,
 
-    data() {
-      return {
-        controls: []
-      }
-    },
-
     methods: {
       checkAction(name) {
         return this.actions && hasOwn(this.actions, name);
       },
 
-      resetForm() {
-        console.log(this.controls);
+      reset(name = 'form') {
+        Object.assign(this.$data[name], this.$options.data.call(this)[name]);
       },
 
       async onSubmit() {
@@ -46,20 +40,6 @@
           }
         }
       }
-    },
-
-    created() {
-      this.$on('addControl', (control) => {
-        if (control) {
-          this.controls.push(control);
-        }
-      });
-
-      this.$on('removeControl', (control) => {
-        if (control) {
-          this.controls.splice(this.controls.indexOf(control), 1);
-        }
-      });
     }
   }
 </script>
@@ -71,6 +51,9 @@
     &__line
       &:not(:first-child)
         margin-top 15px
+
+    &__checkbox
+      margin-top 25px
 
     &__submit
       margin-top 30px

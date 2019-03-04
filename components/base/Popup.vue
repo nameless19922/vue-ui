@@ -85,9 +85,6 @@
     padding 70px 60px 60px
     background-color $color-white
 
-    &._message
-      background $color-glitter
-
     &__close
       popupClose()
 

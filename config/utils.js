@@ -34,7 +34,6 @@ function getFilesFromDir(dir, ext) {
 }
 
 function markClientPlugins(plugins, clientList) {
-
   return plugins.map((item) => {
     let isClient = false;
 

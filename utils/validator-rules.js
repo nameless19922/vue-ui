@@ -1,0 +1,1 @@
+export const phone = (value, args) => /^(\+7|8)?\d{10}$/.test(value.replace(/[\s\-]/g, ''));

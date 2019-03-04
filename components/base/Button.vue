@@ -5,6 +5,7 @@
     :is="buttonType"
     :href="href"
     :type="buttonType === 'button' && type ? type : null"
+    :to="buttonType === 'nuxt-link' ? this.href : null"
     @click="onClick"
   >
     <div class="btn__content">
@@ -16,7 +17,7 @@
 
 <script>
   import Icon from '@/components/base/Icon';
-  import clickable from '@/assets/js/mixins/clickable';
+  import clickable from '@/utils/mixins/clickable';
 
   const props = {
     href: String,
@@ -39,7 +40,11 @@
 
     computed: {
       buttonType() {
-        return typeof this.href !== 'undefined' ? 'a': 'button';
+        if (this.href) {
+          return this.nuxt ? 'nuxt-link' : 'a';
+        } else {
+          return 'button';
+        }
       },
 
       classes() {

@@ -1,7 +1,15 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const { getRouter } = require('./utils');
+const feedbackController = require('./controllers/feedback');
 
 const app = express();
 
-app.use('/send', require('./routes/send'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-module.exports = { path: '/api', handler: app }
+app.use('/send', getRouter({
+  '/': feedbackController.index
+}));
+
+module.exports = { path: '/api', handler: app };

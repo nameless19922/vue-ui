@@ -1,26 +1,27 @@
 <template>
-  <no-ssr>
-    <div class="select" :class="classes">
-      <div class="select__label" v-if="label || $slots.default">
-        <slot>{{ label }}</slot>
-      </div>
-      <v-select
-        :options="options"
-        :placeholder="hasFloatingLabel ? null : placeholder"
-        :value="value"
-        :disabled="disabled"
-        :name="name"
-        :onChange="onChange"
-      ></v-select>
-      <span class="form-control__error" v-if="errors.has(name)">
-        {{ errors.first(name) }}
-      </span>
+  <div class="select" :class="classes">
+    <div class="select__label" v-if="label || $slots.default">
+      <slot>{{ label }}</slot>
     </div>
-  </no-ssr>
+    <multiselect
+      :options="options"
+      :placeholder="hasFloatingLabel ? null : placeholder"
+      :value="value"
+      :disabled="disabled"
+      :name="name"
+      :searchable="false"
+      :showLabels="false"
+
+      @input="onChange"
+    ></multiselect>
+    <span class="form-control__error" v-if="errors.has(name)">
+      {{ errors.first(name) }}
+    </span>
+  </div>
 </template>
 
 <script>
-  import validatable from '@/assets/js/mixins/validatable';
+  import validatable from '@/utils/mixins/validatable';
 
   const props = {
     placeholder: String,
@@ -66,9 +67,7 @@
 
     watch: {
       value(current) {
-        if (current) {
-          this.isActive = true;
-        }
+        this.isActive = !!current;
       }
     },
 
@@ -94,21 +93,62 @@
     },
 
     methods: {
-      onChange(e) {
-        this.validate && this.validate(e);
+      onChange(val) {
+        this.validate && this.validate(val);
 
-        this.$emit('input', e);
+        this.$emit('input', val);
+      }
+    },
+
+    mounted() {
+      if (this.value) {
+        this.isActive = true;
       }
     }
   }
 </script>
-
 <style lang="stylus">
   $select-padding = 0 20px
   $height = 50px
 
   .select
     position relative
+
+    .multiselect
+      box-sizing border-box
+      height $height
+      min-height 0
+      color $primary-text-color
+      z-index 10
+
+      &__option
+        &--highlight
+          background-color $color-brandeis-blue !important
+
+        &--selected
+          background-color transparent
+          font-weight 400
+
+      &__single
+        min-height 0
+        margin-bottom 0
+        padding 0 0 0 20px
+        font-size 14px
+        line-height $height - 2
+
+      &__select
+        display none
+
+      &__content
+        &-wrapper
+          border-radius 0
+
+      &__tags
+        height $height
+        min-height 0
+        padding 0
+        border-radius 0
+        border 1px solid $color-liberty
 
     &__label
       position relative
@@ -118,52 +158,28 @@
       line-height 1
       text-align left
       transition all $transition-time ease-in-out
-      z-index 2
 
     &._floating
+      .multiselect
+        &__single
+          margin-top 23px
+          line-height 1
+
       & ^[0]__label
         position absolute
         top 18px
         left 0
         margin-bottom 0
         padding-left 20px
+        z-index 11
 
       &._active
         & ^[0]__label
           top 10px
           font-size 10px
 
-        .v-select
-          .selected-tag
-            margin-top 19px
-
-    .v-select
-      .selected-tag
-        margin 13px 0 0
-        padding 0
-        border none
-
-      input[type="search"]
-        height $height
-        padding $select-padding
-        font-size 14px
-        font-family $base-font
-        line-height 1
-
-      .open-indicator
-        bottom 15px
-
-      .dropdown-toggle
-        padding $select-padding
-        background-color $color-white
-        border-radius 0
-        border 1px solid $color-liberty
-
-        .clear
-          display none
-
     &._error
-      .v-select
-        .dropdown-toggle
-          border 1px solid $color-coral-reef
+      .multiselect
+        &__tags
+          border-color $color-coral-reef
 </style>

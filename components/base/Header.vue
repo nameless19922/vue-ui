@@ -11,8 +11,6 @@
 </template>
 
 <script>
-  import Icon from '@/components/base/Icon';
-
   const types = ['default', 'white'];
 
   const props = {
@@ -37,7 +35,8 @@
 </script>
 
 <style lang="stylus">
-  @import "../mixins/sizesvg"
+  @import "~@/assets/stylus/mixins/sizesvg"
+  @import "~@/assets/stylus/mixins/media-width-down"
 
   $header-size-logo = 30px
 
@@ -78,4 +77,8 @@
       &-img
         sizesvg($header-size-logo, $header-size-logo)
         background svg-load('../../assets/images/svg/logo.svg')
+
+    +media-width-down($screen-xs)
+      &__logo-text
+        display none
 </style>

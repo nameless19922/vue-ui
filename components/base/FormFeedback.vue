@@ -1,5 +1,5 @@
 <template>
-  <Form :actions="callbacks" @addControl="alert('asd')">
+  <Form :actions="callbacks" class="form-feedback">
     <div class="form__line">
       <FormControl
         class="_big"
@@ -34,7 +34,7 @@
         v-model="form.phone"
       />
     </div>
-    <div class="form__line">
+    <div class="form__checkbox">
       <FormCheckbox
         name="agree"
         rules="required"
@@ -43,7 +43,7 @@
         v-model="form.agree"
       />
     </div>
-    <div class="popup-feedback__form-submit form__submit">
+    <div class="form-feedback__submit form__submit">
       <Button class="_block" type="submit" :loading="processLoading">Отправить</Button>
     </div>
   </Form>
@@ -54,15 +54,15 @@
   import FormControl from '@/components/base/FormControl';
   import FormCheckbox from '@/components/base/FormCheckbox';
   import Button from '@/components/base/Button';
-  import { dynamicMessage } from '@/assets/js/utils/components';
-  import FeedbackService from '@/assets/js/services/feedback-service';
+  import { dynamicMessage } from '@/utils/components';
+  import FeedbackService from '@/utils/services/feedback-service';
 
   export default {
     name: 'FormFeedback',
 
-    inject: ['showDynamicPopup'],
-
     extends: Form,
+
+    inject: ['showDynamicPopup'],
 
     components: { Button, Form, FormControl, FormCheckbox },
 
@@ -72,7 +72,7 @@
           name: '',
           email: '',
           phone: '',
-          agree: null,
+          agree: true,
         },
 
         processLoading: false,
@@ -82,10 +82,11 @@
             this.processLoading = true;
 
             try {
-              const response = await new FeedbackService().get();
+              const response = await new FeedbackService().post(this.form);
 
               if (response.status) {
                 this.showDynamicPopup({ title: 'Спасибо!', text: 'Мы перезвоним вам в ближайшее время' });
+                this.reset();
               } else {
                 throw new Error('Incorrect status');
               }
@@ -103,5 +104,8 @@
 </script>
 
 <style lang="stylus">
-
+  .form-feedback
+    &__submit
+      max-width 225px
+      margin 30px auto 0
 </style>

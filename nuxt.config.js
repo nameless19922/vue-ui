@@ -22,21 +22,17 @@ module.exports = {
     ]
   },
 
+  loading: false,
+
   plugins: markClientPlugins(
     plugins,
-    ['vue-select', 'inputmask']
+    ['inputmask']
   ),
 
   build: {
-    watch: ['server', 'common', 'config'],
+    watch: ['server', 'common', 'config', 'utils'],
 
     vendor: plugins.concat(['babel-polyfill', 'axios']),
-
-    plugins: [
-      new webpack.optimize.LimitChunkCountPlugin({
-        maxChunks: 4
-      })
-    ],
 
     extractCSS: { allChunks: true },
 
@@ -73,6 +69,7 @@ module.exports = {
   },
 
   css: [
+    { src: 'vue-multiselect/dist/vue-multiselect.min.css' },
     { src: '@/assets/stylus/app.styl', lang: 'stylus' }
   ],
 

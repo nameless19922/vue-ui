@@ -15,7 +15,7 @@
 </template>
 
 <script>
-  import clickable from '@/assets/js/mixins/clickable';
+  import clickable from '@/utils/mixins/clickable';
 
   const props = {
     src: {

@@ -51,8 +51,4 @@
 
     &__form
       padding 0 15%
-
-      &-submit
-        max-width 225px
-        margin 30px auto 0
 </style>

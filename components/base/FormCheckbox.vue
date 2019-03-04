@@ -7,8 +7,9 @@
         :name="name"
         :value="value"
         :disabled="disabled"
+        :checked="value"
 
-        @change="onChange"
+        @input="onChange"
       >
       <span class="form-checkbox__text" v-if="label || slots.default">
         <slot>{{ label }}</slot>
@@ -22,8 +23,7 @@
 </template>
 
 <script>
-  import validatable from '@/assets/js/mixins/validatable';
-  import controlsHooks from '@/assets/js/mixins/controls-hooks';
+  import validatable from '@/utils/mixins/validatable';
 
   const props = {
     name: String,
@@ -46,13 +46,13 @@
   export default {
     name: 'FormCheckbox',
 
-    mixins: [controlsHooks, validatable],
+    mixins: [validatable],
 
     props,
 
     data() {
       return {
-        isChecked: this.checked
+        isChecked: this.value
       };
     },
 
@@ -74,7 +74,7 @@
     position relative
     padding-left 30px
     color #777
-    font-size 9px
+    font-size 14px
     line-height 1.4
     letter-spacing .4px
 
@@ -99,7 +99,7 @@
         width 20px
         height 20px
         position absolute
-        top -5px
+        top -1px
         left -30px
         content ''
         border 1px solid $color-liberty
@@ -111,7 +111,7 @@
         width 14px
         height 14px
         position absolute
-        top -5px
+        top -1px
         left -27px
         margin-top 2px
         background svg-load('../../assets/images/svg/i_check.svg') 50% 50% no-repeat

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { convertToUnit } from '@/assets/js/utils/helpers';
+  import { convertToUnit } from '@/utils/helpers';
 
   const props = {
     image: String,
