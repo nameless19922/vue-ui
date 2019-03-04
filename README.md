@@ -1,7 +1,3 @@
-# lp-broker
-
-> lp-broker
-
 ## Build Setup
 
 ``` bash
